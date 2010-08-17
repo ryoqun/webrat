@@ -76,6 +76,7 @@ For example:
       @default_headers = {}
       @custom_headers  = {}
       @current_url     = nil
+      @_identical_redirect_count = 0
       reset
     end
 
@@ -137,7 +138,6 @@ For example:
 
     def check_for_infinite_redirects
       if current_url == response_location
-        @_identical_redirect_count ||= 0
         @_identical_redirect_count += 1
       end
 
@@ -148,7 +148,7 @@ For example:
 
     def infinite_redirect_limit_exceeded?
        Webrat.configuration.infinite_redirect_limit &&
-       (@_identical_redirect_count || 0) > Webrat.configuration.infinite_redirect_limit
+       @_identical_redirect_count > Webrat.configuration.infinite_redirect_limit
     end
 
     def success_code? #:nodoc:
